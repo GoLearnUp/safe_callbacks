@@ -3,7 +3,7 @@ require 'rspec'
 require 'active_model'
 require 'ruby-debug'
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'safe_callbacks_spec')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'safe_callbacks')
 
 RSpec.configure do |config|
   # Run specs in random order to surface order dependencies. If you find an
