@@ -10,6 +10,7 @@ module SafeCallbacks
     :before_save,
     :before_update,
     :before_validation,
+    :validate,
   ]
 
   class << self
