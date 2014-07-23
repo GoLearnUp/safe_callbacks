@@ -18,7 +18,7 @@ Without that last 'true', the callback chain will be halted.
 
 ## Usage
 
-    gem 'safe-callbacks'
+    gem 'safe_callbacks'
 
 and then:
 
