@@ -1,57 +1,32 @@
 
-# fixturize
+# safe_callbacks
 
-## What problem does it solve?
+Tired of writing the following (or forgetting) ?
 
-  Rails tests often create expensive objects in before(:each) / setup
-  which gets shared between multiple tests.
+    class User
+      before_validation :denormalize_a_bool
 
-  Usually it's not inserting the raw data which takes a majority of the time;
-  rather it's the instantiation and callbacks.  So why not perform raw inserts instead?
+    private
 
-## Example
-
-    describe User do
-      before :each do
-        fixturize do
-          @user = FactoryGirl.create(:user)
-        end
-      end
-
-      it "should run this block faster the second time" do
-        expect(@user.class).to eq(User)
+      def denormalize_a_bool
+        self.a_bool = something_is_true?
+        true
       end
     end
 
-## Install
+Without that last 'true', the callback chain will be halted.
 
-Gemfile:
+## Usage
 
-    group :test do
-      gem 'fixturize'
+    gem 'safe-callbacks'
+
+and then:
+
+    MongoMapper.extend SafeCallbacks
+
+or:
+
+    class MyClass
+      include MongoMapper::Document
+      include SafeCallbacks
     end
-
-spec_helper.rb:
-
-   Fixturize.version = 1 # bump this if you change the source of a block
-   Fixturize.database = MongoMapper.database
-   Fixturize.enabled = true
-
-   # (only if you wipe your db between test runs):
-   RSpec.configure do |config|
-     def wipe_db
-       MongoMapper.database.collections.each do |c|
-         unless (c.name =~ /system/ || Fixturize.collection_name == c.name)
-           c.remove()
-         end
-       end
-     end
-
-     config.before(:each) do
-       wipe_db
-     end
-   end
-
-## FAQ
-
-TODO!

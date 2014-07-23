@@ -12,18 +12,24 @@ module SafeCallbacks
     :before_validation,
   ]
 
-  def self.included(mod)
-    SafeCallbacks::CALLBACK_METHODS.each do |callback_method_name|
-      unsafe_callback_method_name = :"unsafe_#{callback_method_name}"
+  class << self
+    def extended(mod)
+      SafeCallbacks::CALLBACK_METHODS.each do |callback_method_name|
+        unsafe_callback_method_name = :"unsafe_#{callback_method_name}"
 
-      if mod.respond_to?(callback_method_name) && !mod.respond_to?(unsafe_callback_method_name)
-        (class << mod; self; end).instance_eval do
-          alias_method unsafe_callback_method_name, callback_method_name
+        if mod.respond_to?(callback_method_name) && !mod.respond_to?(unsafe_callback_method_name)
+          (class << mod; self; end).instance_eval do
+            alias_method unsafe_callback_method_name, callback_method_name
+          end
         end
       end
+
+      mod.extend ClassMethods
     end
 
-    mod.extend ClassMethods
+    def included(mod)
+      mod.extend self
+    end
   end
 
   module ClassMethods
