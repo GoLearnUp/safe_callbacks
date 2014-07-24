@@ -22,11 +22,13 @@ Without that last 'true', the callback chain will be halted.
 
 and then:
 
-    MongoMapper.extend SafeCallbacks
-
-or:
-
     class MyClass
       include MongoMapper::Document
       include SafeCallbacks
     end
+
+or:
+
+    SafeCallbacks.extend_mongo_mapper!
+
+for all models

@@ -137,4 +137,14 @@ describe SafeCallbacks do
       @class.should respond_to("unsafe_#{callback_method}")
     end
   end
+
+  it "should be able to extend Mongomapper::Documents automatically" do
+    SafeCallbacks.extend_mongo_mapper!
+
+    klass = Class.new do
+      include MongoMapper::Document
+    end
+
+    klass.should respond_to("unsafe_before_save")
+  end
 end

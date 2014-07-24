@@ -14,6 +14,10 @@ module SafeCallbacks
   ]
 
   class << self
+    def extend_mongo_mapper!
+      MongoMapper::Document.extend SafeCallbacks::MongoMapperExtension
+    end
+
     def extended(mod)
       SafeCallbacks::CALLBACK_METHODS.each do |callback_method_name|
         unsafe_callback_method_name = :"unsafe_#{callback_method_name}"
@@ -30,6 +34,13 @@ module SafeCallbacks
 
     def included(mod)
       mod.extend self
+    end
+  end
+
+  module MongoMapperExtension
+    def included(mod)
+      super
+      mod.extend SafeCallbacks
     end
   end
 
